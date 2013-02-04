@@ -38,6 +38,11 @@ public class Page {
 		
 		return other.url.getPath() == this.url.getPath();
 	}
+
+	public void addArguments(HtmlPage linkedPage) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

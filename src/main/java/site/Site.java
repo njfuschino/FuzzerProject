@@ -49,7 +49,12 @@ public class Site {
 			if (!pages.contains(linkedPage)) {
 				nonDuplicateLinkedPages.add(new Page(linkedPage));
 			} else {
-				//TODO: if applicable, add arguments to original page
+				for (Page existingPage : pages) {
+					if(existingPage.equals(linkedPage)) {
+						existingPage.addArguments(linkedPage);
+						break;
+					}
+				}
 			}
 		}
 		
