@@ -8,7 +8,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Fuzzer {
-
 	private WebClient webClient;
 
 	public Fuzzer(WebClient webClient) {

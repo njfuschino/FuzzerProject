@@ -9,9 +9,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Page {
-	URL url;
-	HtmlPage htmlPage;
-	Map<String, List<String>> arguments;
+	private URL url;
+	private HtmlPage htmlPage;
+	private Map<String, List<String>> arguments;
 	
 	
 	public Page(HtmlPage htmlPage) {
