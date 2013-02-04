@@ -1,6 +1,9 @@
+package fuzzer;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
+import site.Page;
 import site.Site;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -17,7 +20,15 @@ public class Fuzzer {
 	public void fuzz(String targetURL) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 		Site site = discoverAttackSurface(targetURL);
+		reportAttackSurface(site);
 
+	}
+
+	private void reportAttackSurface(Site site) {
+		List<Page> pages = site.getPages();
+		for(Page page : pages) {
+			System.out.println(page);
+		}
 	}
 
 	private Site discoverAttackSurface(String siteUrl)
