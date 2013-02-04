@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import site.Site;
+
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
@@ -24,20 +26,22 @@ public class Fuzzer {
 		this.webClient = webClient;
 	}
 
-	public void fuzz(String siteURL) throws FailingHttpStatusCodeException,
+	public void fuzz(String targetURL) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
-		discoverAttackSurface(siteURL);
+		Site site = discoverAttackSurface(targetURL);
 
 	}
 
-	private void discoverAttackSurface(String siteURL)
+	private Site discoverAttackSurface(String siteURL)
 			throws FailingHttpStatusCodeException, MalformedURLException,
 			IOException {
+		Site site = new Site(siteURL);
 		HtmlPage page = (HtmlPage) webClient.getPage(siteURL);
 		List<HtmlAnchor> links = page.getAnchors();
 		for (HtmlAnchor subPage : links) {
 			System.out.println(subPage.asText());
 		}
+		return site;
 
 	}
 
