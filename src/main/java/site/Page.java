@@ -2,27 +2,37 @@ package site;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Page {
 	private URL url;
 	private HtmlPage htmlPage;
 	private List<String> arguments;
+	private List<Form> forms;
 
 	public Page(HtmlPage htmlPage) throws MalformedURLException {
 		this.htmlPage = htmlPage;
 		URL tempUrl = htmlPage.getWebResponse().getWebRequest().getUrl();
 		this.url = new URL(tempUrl.getProtocol(), tempUrl.getHost(),
 				tempUrl.getPath());
-		this.arguments = new LinkedList<String>();
-
+		this.arguments = new ArrayList<String>();
+		this.forms = new ArrayList<Form>();
 	}
 
 	public void discoverInputs() {
 		addArguments(htmlPage);
+		discoverForms();
+	}
+
+	private void discoverForms() {
+		List<HtmlForm> formsOnPage = htmlPage.getForms();
+		for (HtmlForm form : formsOnPage) {
+			forms.add(new Form(form));
+		}
 	}
 
 	public HtmlPage getHtmlPage() {
@@ -31,6 +41,10 @@ public class Page {
 
 	public URL getURL() {
 		return url;
+	}
+	
+	public List<Form> getForms() {
+		return forms;
 	}
 	
 	public void addArguments(HtmlPage linkedPage) {

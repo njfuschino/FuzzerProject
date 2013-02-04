@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
+import site.Form;
 import site.Page;
 import site.Site;
 
@@ -33,6 +34,10 @@ public class Fuzzer {
 		List<Cookie> cookies = site.getCookies();
 		for (Cookie cookie : cookies) {
 			System.out.println("Cookie:\t" + cookie.getName());
+		}
+		List<Form> forms = site.getForms();
+		for (Form form : forms) {
+			System.out.println(form);
 		}
 	}
 

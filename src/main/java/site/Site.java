@@ -20,6 +20,7 @@ public class Site {
 	private Page basePage;
 	private List<Page> pages;
 	private List<Cookie> cookies;
+	private List<Form> forms;
 
 	public Site(HtmlPage baseHtmlPage) throws MalformedURLException {
 		this.webClient = baseHtmlPage.getWebClient();
@@ -27,12 +28,12 @@ public class Site {
 		this.baseUrl = baseHtmlPage.getWebResponse().getWebRequest().getUrl();
 		this.pages = new ArrayList<Page>();
 		this.cookies = new ArrayList<Cookie>();
+		this.forms = new ArrayList<Form>();
 		pages.add(basePage);
 	}
 
 	public void discoverSite() throws MalformedURLException, IOException {
 		discoverPage(basePage);
-
 		discoverCookies();
 	}
 
@@ -46,6 +47,7 @@ public class Site {
 	private void discoverPage(Page page) throws MalformedURLException,
 			IOException {
 		page.discoverInputs();
+		forms.addAll(page.getForms());
 		List<HtmlAnchor> links = page.getHtmlPage().getAnchors();
 		List<HtmlPage> linkedPages = new ArrayList<HtmlPage>();
 		for (HtmlAnchor link : links) {
@@ -97,6 +99,10 @@ public class Site {
 
 	public List<Cookie> getCookies() {
 		return cookies;
+	}
+
+	public List<Form> getForms() {
+		return forms;
 	}
 
 }
