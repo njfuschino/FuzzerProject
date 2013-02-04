@@ -18,7 +18,7 @@ public class Site {
 	private Page basePage;
 	private List<Page> pages;
 
-	public Site(HtmlPage baseHtmlPage) {
+	public Site(HtmlPage baseHtmlPage) throws MalformedURLException {
 		this.webClient = baseHtmlPage.getWebClient();
 		this.basePage = new Page(baseHtmlPage);
 		this.baseUrl = baseHtmlPage.getWebResponse().getUrl();
@@ -40,8 +40,7 @@ public class Site {
 			HtmlPage linkedHtmlPage = (HtmlPage) webClient.getPage(page
 					.getHtmlPage()
 					.getFullyQualifiedUrl(link.getHrefAttribute()));
-			if (baseUrl.getHost().equals(
-					linkedHtmlPage.getWebResponse().getUrl().getHost())) {
+			if (isInternalLink(linkedHtmlPage)) {
 				linkedPages.add(linkedHtmlPage);
 			}
 		}
@@ -49,7 +48,7 @@ public class Site {
 		List<Page> nonDuplicateLinkedPages = new ArrayList<Page>();
 		for (HtmlPage linkedPage : linkedPages) {
 			Page newPage = new Page(linkedPage);
-			if (!pages.contains(newPage)) {
+			if (!pages.contains(newPage) && !nonDuplicateLinkedPages.contains(newPage)) {
 				nonDuplicateLinkedPages.add(newPage);
 			} else {
 				for (Page existingPage : pages) {
@@ -66,6 +65,11 @@ public class Site {
 		for (Page linkedPage : nonDuplicateLinkedPages) {
 			discoverPage(linkedPage);
 		}
+	}
+
+	private boolean isInternalLink(HtmlPage linkedHtmlPage) {
+		return baseUrl.getHost().equals(
+				linkedHtmlPage.getWebResponse().getUrl().getHost());
 	}
 
 	public List<Page> getPages() {
