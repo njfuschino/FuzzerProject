@@ -29,6 +29,19 @@ public class Page {
 		return links;
 	}
 	
+	public boolean equals(Object o) {
+		if(o.getClass() != this.getClass()) {
+			return false;
+		}
+		
+		Page other = (Page) o;
+		
+		return other.url.getPath() == this.url.getPath();
+	}
+	
+	
+	
+	
 	
 	
 	

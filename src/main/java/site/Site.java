@@ -46,7 +46,7 @@ public class Site {
 		
 		List<Page> nonDuplicateLinkedPages = new LinkedList<Page>();
 		for (HtmlPage linkedPage : linkedPages) {
-			if (isNotDuplicate()) {
+			if (!pages.contains(linkedPage)) {
 				nonDuplicateLinkedPages.add(new Page(linkedPage));
 			} else {
 				//TODO: if applicable, add arguments to original page
@@ -58,11 +58,6 @@ public class Site {
 		for (Page linkedPage : nonDuplicateLinkedPages) {
 			discoverPage(linkedPage);
 		}
-	}
-
-	private boolean isNotDuplicate() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	private boolean isNotExternalLink(HtmlPage linkedHtmlPage) {
