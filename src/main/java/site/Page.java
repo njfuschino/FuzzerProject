@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Page {
@@ -15,7 +14,7 @@ public class Page {
 
 	public Page(HtmlPage htmlPage) throws MalformedURLException {
 		this.htmlPage = htmlPage;
-		URL tempUrl = htmlPage.getWebResponse().getUrl();
+		URL tempUrl = htmlPage.getWebResponse().getWebRequest().getUrl();
 		this.url = new URL(tempUrl.getProtocol(), tempUrl.getHost(),
 				tempUrl.getPath());
 		this.arguments = new LinkedList<String>();
@@ -33,14 +32,9 @@ public class Page {
 	public URL getURL() {
 		return url;
 	}
-
-	public List<HtmlAnchor> getAnchors() {
-		List<HtmlAnchor> links = htmlPage.getAnchors();
-		return links;
-	}
-
+	
 	public void addArguments(HtmlPage linkedPage) {
-		URL otherUrl = linkedPage.getWebResponse().getUrl();
+		URL otherUrl = linkedPage.getWebResponse().getWebRequest().getUrl();
 		String query = otherUrl.getQuery();
 		if (query == null) {
 			return;
