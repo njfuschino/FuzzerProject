@@ -1,12 +1,10 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import site.Site;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Fuzzer {
@@ -35,12 +33,9 @@ public class Fuzzer {
 	private Site discoverAttackSurface(String siteURL)
 			throws FailingHttpStatusCodeException, MalformedURLException,
 			IOException {
-		Site site = new Site(siteURL);
 		HtmlPage page = (HtmlPage) webClient.getPage(siteURL);
-		List<HtmlAnchor> links = page.getAnchors();
-		for (HtmlAnchor subPage : links) {
-			System.out.println(subPage.asText());
-		}
+		Site site = new Site(page);
+		site.discoverSite();
 		return site;
 
 	}
