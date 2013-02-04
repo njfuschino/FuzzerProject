@@ -9,15 +9,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Fuzzer {
 
-	public static void main(String[] args)
-			throws FailingHttpStatusCodeException, MalformedURLException,
-			IOException {
-		WebClient webClient = new WebClient();
-		webClient.setJavaScriptEnabled(true);
-		Fuzzer fuzzer = new Fuzzer(webClient);
-		fuzzer.fuzz("http://127.0.0.1:8080/bodgeit/");
-	}
-
 	private WebClient webClient;
 
 	public Fuzzer(WebClient webClient) {
@@ -30,14 +21,23 @@ public class Fuzzer {
 
 	}
 
-	private Site discoverAttackSurface(String siteURL)
+	private Site discoverAttackSurface(String siteUrl)
 			throws FailingHttpStatusCodeException, MalformedURLException,
 			IOException {
-		HtmlPage page = (HtmlPage) webClient.getPage(siteURL);
+		HtmlPage page = (HtmlPage) webClient.getPage(siteUrl);
 		Site site = new Site(page);
 		site.discoverSite();
 		return site;
 
+	}
+	
+	public static void main(String[] args)
+			throws FailingHttpStatusCodeException, MalformedURLException,
+			IOException {
+		WebClient webClient = new WebClient();
+		webClient.setJavaScriptEnabled(true);
+		Fuzzer fuzzer = new Fuzzer(webClient);
+		fuzzer.fuzz("http://127.0.0.1:8080/bodgeit/");
 	}
 
 }

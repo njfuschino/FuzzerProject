@@ -1,14 +1,19 @@
 package site;
 
+import java.net.URL;
+
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Page {
-
-	public Page(HtmlPage baseUrlPage) {
-		// TODO Auto-generated constructor stub
+	URL url;
+	HtmlPage htmlPage;
+	
+	public Page(HtmlPage htmlPage) {
+		this.htmlPage = htmlPage;
+		this.url = htmlPage.getWebResponse().getUrl();
 	}
 
-	String url;
+
 	
 	
 	

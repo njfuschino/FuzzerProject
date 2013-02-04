@@ -1,17 +1,19 @@
 package site;
 
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Site {
-
+	URL baseUrl;
 	Page basePage;
 	private List<Page> pages;
 	
-	public Site(HtmlPage baseUrlPage) {
-		this.basePage = new Page(baseUrlPage);
+	public Site(HtmlPage baseHtmlPage) {
+		this.basePage = new Page(baseHtmlPage);
+		this.baseUrl = baseHtmlPage.getWebResponse().getUrl();
 		this.pages = new LinkedList<Page>();
 		pages.add(basePage);
 	}
