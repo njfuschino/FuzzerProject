@@ -55,7 +55,7 @@ public class Fuzzer {
 		WebClient webClient = new WebClient();
 		webClient.setJavaScriptEnabled(true);
 		Fuzzer fuzzer = new Fuzzer(webClient);
-		fuzzer.fuzz("http://127.0.0.1:8080/jpetstore/");
+		fuzzer.fuzz("http://127.0.0.1/dvwa/login.php");
 	}
 
 }
