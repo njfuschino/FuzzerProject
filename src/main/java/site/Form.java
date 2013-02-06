@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
 
 public class Form {
 	HtmlForm form;
@@ -15,17 +16,12 @@ public class Form {
 		this.inputs = new ArrayList<HtmlElement>();
 		
 		for (HtmlElement element : form.getHtmlElementDescendants()) {
-			if(elementIsInput(element)) {
+			if(element instanceof HtmlInput) {
 				inputs.add(element);
 			}
 		}
 	}
 
-	private boolean elementIsInput(HtmlElement element) {
-		String elementType = element.getTagName();
-		return elementType.equals("input");
-	}
-	
 	public String toString() {
 		String string = "";
 		
@@ -34,8 +30,4 @@ public class Form {
 		return string;
 	}
 	
-	
-	
-	
-
 }
