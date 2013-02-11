@@ -34,7 +34,15 @@ public class Site {
 
 	public void discoverSite() throws MalformedURLException, IOException {
 		discoverPage(basePage);
+		
+		guessPages();
+		
 		discoverCookies();
+	}
+
+	private void guessPages() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void discoverCookies() {
