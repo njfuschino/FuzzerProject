@@ -33,7 +33,7 @@ public class Fuzzer {
 		}
 		List<Cookie> cookies = site.getCookies();
 		for (Cookie cookie : cookies) {
-			System.out.println("Cookie:\t" + cookie.getName());
+			System.out.println("Cookie:\t" + cookie.getName() + "\n");
 		}
 		List<Form> forms = site.getForms();
 		for (Form form : forms) {
@@ -55,7 +55,7 @@ public class Fuzzer {
 		WebClient webClient = new WebClient();
 		webClient.setJavaScriptEnabled(true);
 		Fuzzer fuzzer = new Fuzzer(webClient);
-		fuzzer.fuzz("http://127.0.0.1/dvwa/login.php");
+		fuzzer.fuzz("http://127.0.0.1:8080/jpetstore/");
 	}
 
 }
