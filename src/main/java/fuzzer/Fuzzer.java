@@ -1,7 +1,10 @@
 package fuzzer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -15,17 +18,36 @@ import site.Site;
 public class Fuzzer {
 	private WebClient webClient;
 	private String targetURL;
+	private List<String> sensitiveData;
 
-	public Fuzzer(WebClient webClient, String targetURL) {
+	public Fuzzer(WebClient webClient, String targetURL, String sensitiveDataFilePath) throws IOException {
 		this.targetURL = targetURL;
 		this.webClient = webClient;
+		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
+		
 	}
 
-	public void fuzz() throws MalformedURLException,
+	private List<String> getSensitiveData(String sensitiveDataFilePath) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(sensitiveDataFilePath));
+		
+		ArrayList<String> sensitiveData = new ArrayList<String>();
+		String line = reader.readLine();
+		while (line != null) {
+			sensitiveData.add(line);
+		}
+		return this.sensitiveData;
+	}
+
+	public void run() throws MalformedURLException,
 			IOException {
 		Site site = discoverAttackSurface(targetURL);
 		reportAttackSurface(site);
+		fuzz(site);
 
+	}
+
+	private void fuzz(Site site) {
+		
 	}
 
 	private void reportAttackSurface(Site site) {
@@ -49,7 +71,6 @@ public class Fuzzer {
 		Site site = new Site(page);
 		site.discoverSite();
 		return site;
-
 	}
 
 	/**
@@ -62,7 +83,7 @@ public class Fuzzer {
 		FuzzerFactory fuzzerBuilder = new FuzzerFactory();
 		Fuzzer fuzzer = fuzzerBuilder.getFuzzer(args);
 
-		fuzzer.fuzz();
+		fuzzer.run();
 	}
 
 }
