@@ -83,7 +83,8 @@ public class Fuzzer {
 
 	/**
 	 * @param args
-	 *            0- target url 1- time delay (can be 0)
+	 *            0- target url
+	 *            1- time delay (can be 0)
 	 */
 	public static void main(String[] args) throws MalformedURLException,
 			IOException {
