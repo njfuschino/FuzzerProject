@@ -52,7 +52,7 @@ public class Fuzzer {
 
 	public static void main(String[] args) throws MalformedURLException,
 			IOException {
-		WebClient webClient = new WebClient();
+		WebClient webClient = new TimeDelayWebClient(0);
 		webClient.setJavaScriptEnabled(true);
 		Fuzzer fuzzer = new Fuzzer(webClient);
 		fuzzer.fuzz("http://127.0.0.1:8080/jpetstore/");
