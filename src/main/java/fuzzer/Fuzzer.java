@@ -20,26 +20,34 @@ public class Fuzzer {
 	private String targetURL;
 	private List<String> sensitiveData;
 
-	public Fuzzer(WebClient webClient, String targetURL, String sensitiveDataFilePath) throws IOException {
+	public Fuzzer(WebClient webClient, String targetURL,
+			String sensitiveDataFilePath) throws IOException {
 		this.targetURL = targetURL;
 		this.webClient = webClient;
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
-		
+
 	}
 
-	private List<String> getSensitiveData(String sensitiveDataFilePath) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(sensitiveDataFilePath));
-		
-		ArrayList<String> sensitiveData = new ArrayList<String>();
-		String line = reader.readLine();
-		while (line != null) {
-			sensitiveData.add(line);
+	private List<String> getSensitiveData(String sensitiveDataFilePath)
+			throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(
+				sensitiveDataFilePath));
+
+		try {
+			ArrayList<String> sensitiveData = new ArrayList<String>();
+			String line = reader.readLine();
+			while (line != null) {
+				sensitiveData.add(line);
+				line = reader.readLine();
+			}
+
+			return this.sensitiveData;
+		} finally {
+			reader.close();
 		}
-		return this.sensitiveData;
 	}
 
-	public void run() throws MalformedURLException,
-			IOException {
+	public void run() throws MalformedURLException, IOException {
 		Site site = discoverAttackSurface(targetURL);
 		reportAttackSurface(site);
 		fuzz(site);
@@ -47,7 +55,7 @@ public class Fuzzer {
 	}
 
 	private void fuzz(Site site) {
-		
+
 	}
 
 	private void reportAttackSurface(Site site) {
@@ -75,8 +83,7 @@ public class Fuzzer {
 
 	/**
 	 * @param args
-	 *     0- target url
-	 *     1- time delay (can be 0)
+	 *            0- target url 1- time delay (can be 0)
 	 */
 	public static void main(String[] args) throws MalformedURLException,
 			IOException {
