@@ -14,12 +14,14 @@ import site.Site;
 
 public class Fuzzer {
 	private WebClient webClient;
+	private String targetURL;
 
-	public Fuzzer(WebClient webClient) {
+	public Fuzzer(WebClient webClient, String targetURL) {
+		this.targetURL = targetURL;
 		this.webClient = webClient;
 	}
 
-	public void fuzz(String targetURL) throws MalformedURLException,
+	public void fuzz() throws MalformedURLException,
 			IOException {
 		Site site = discoverAttackSurface(targetURL);
 		reportAttackSurface(site);
@@ -50,12 +52,17 @@ public class Fuzzer {
 
 	}
 
+	/**
+	 * @param args
+	 *     0- target url
+	 *     1- time delay (can be 0)
+	 */
 	public static void main(String[] args) throws MalformedURLException,
 			IOException {
-		FuzzerBuilder fuzzerBuilder = new FuzzerBuilder(args);
-		Fuzzer fuzzer = fuzzerBuilder.build();
+		FuzzerFactory fuzzerBuilder = new FuzzerFactory();
+		Fuzzer fuzzer = fuzzerBuilder.getFuzzer(args);
 
-		fuzzer.fuzz("http://127.0.0.1:8080/jpetstore/");
+		fuzzer.fuzz();
 	}
 
 }
