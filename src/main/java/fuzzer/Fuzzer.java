@@ -8,15 +8,14 @@ import java.util.List;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+import site.Page;
 import site.Site;
 
 public class Fuzzer {
 	private WebClient webClient;
-	private Site site;
 	private List<String> sensitiveData;
 
 	public Fuzzer(WebClient webClient, String sensitiveDataFilePath) throws IOException {
-		this.site = site;
 		this.webClient = webClient;
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
 
@@ -42,7 +41,23 @@ public class Fuzzer {
 	}
 
 	public void fuzz(Site site) {
+		fuzzPages(site);
+	}
 
+	private void fuzzPages(Site site) {
+		List<Page> pages = site.getPages();
+		for (Page page : pages) {
+			fuzz(page);
+		}
+	}
+
+	private void fuzz(Page page) {
+		for (String argument : page.getArguments()) {
+			
+		}
+		
+		
+		
 	}
 
 

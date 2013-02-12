@@ -27,7 +27,7 @@ public class Page {
 		addArguments(htmlPage);
 		discoverForms();
 	}
-
+	
 	private void discoverForms() {
 		List<HtmlForm> formsOnPage = htmlPage.getForms();
 		for (HtmlForm form : formsOnPage) {
@@ -39,6 +39,10 @@ public class Page {
 		return htmlPage;
 	}
 
+	public List<String> getArguments() {
+		return arguments;
+	}
+	
 	public URL getURL() {
 		return url;
 	}
