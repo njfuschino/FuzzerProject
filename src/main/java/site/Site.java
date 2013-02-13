@@ -1,13 +1,17 @@
 package site;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.ScriptException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
@@ -26,8 +30,10 @@ public class Site {
 	private List<Page> pages;
 	private List<Cookie> cookies;
 	private List<Form> forms;
+	private String pageGuessFilePath;
 
-	public Site(HtmlPage baseHtmlPage) throws MalformedURLException {
+	public Site(HtmlPage baseHtmlPage, String pageGuessFilePath) throws MalformedURLException {
+		this.pageGuessFilePath = pageGuessFilePath;
 		this.webClient = baseHtmlPage.getWebClient();
 		this.basePage = new Page(baseHtmlPage);
 		this.baseUrl = baseHtmlPage.getWebResponse().getWebRequest().getUrl();
@@ -46,8 +52,42 @@ public class Site {
 	}
 
 	private void guessPages() {
-		// TODO Auto-generated method stub
-		
+		File file = new File(pageGuessFilePath);
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String curLine;
+		String guess;
+		HtmlPage guessPage;
+		while (scanner.hasNextLine()) {
+			curLine = scanner.nextLine();
+			guess = baseUrl.toString() + curLine;
+			try {
+				guessPage = webClient.getPage(guess);
+				boolean doesContain = false;
+				for(Page p : pages){
+					if(p.getHtmlPage() == guessPage){
+						doesContain = true;
+					}
+				}
+				if(!doesContain){
+					pages.add(new Page(guessPage));
+				}
+			} catch (FailingHttpStatusCodeException e) {
+				continue;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		scanner.close();	
 	}
 
 	private void discoverCookies() {
@@ -88,8 +128,26 @@ public class Site {
 		final HtmlPage p = submit.click();
 	}
 		
-	public void authenticateDVWA(HtmlForm form){
-		//This method assumes current form is the login form
+	/**
+	 * Authenticate DVWA
+	 * username: admin
+	 * password: password
+	 */
+	public void authenticateDVWA(HtmlForm form) throws IOException{
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("admin");
+		password.setValueAttribute("password");
+		
+		final HtmlPage p = submit.click();
+		try{
+			discoverPage(new Page(p));
+		}
+		catch(ScriptException e){
+			
+		}
 	}	
 
 	
@@ -141,6 +199,8 @@ public class Site {
 				}
 			} catch (FailingHttpStatusCodeException e) {
 				continue;
+			} catch (ScriptException e) {
+				System.out.println(e.getFailingLine() + "\n" + e.getPage().getUrl());
 			}
 		}
 

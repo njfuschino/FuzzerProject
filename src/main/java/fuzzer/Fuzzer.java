@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
@@ -28,11 +27,9 @@ public class Fuzzer {
 			String maliciousInputFilePath) throws IOException {
 		this.webClient = webClient;
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
-		this.maliciousInputs = MaliciousInputs
-				.getMaliciousInputs(maliciousInputFilePath);
-
+		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);
 	}
-
+	
 	private List<String> getSensitiveData(String sensitiveDataFilePath)
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(

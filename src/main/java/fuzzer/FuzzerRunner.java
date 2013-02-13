@@ -25,7 +25,7 @@ public class FuzzerRunner {
 		webClient.setPrintContentOnFailingStatusCode(false);
 		
 		fuzzer = new Fuzzer(webClient, sensitiveDataFilePath, maliciousInputFilePath);
-		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL);
+		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL, pageGuessFilePath);
 	}
 	
 	public void run() throws MalformedURLException, IOException {
