@@ -9,13 +9,10 @@ import java.util.List;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.WebClient;
-<<<<<<< HEAD
-=======
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
->>>>>>> f71bb847f815ec097532b14376eeea3fb5e82eae
 
 import site.Form;
 import site.Page;
@@ -30,14 +27,7 @@ public class Fuzzer {
 			String maliciousInputFilePath) throws IOException {
 		this.webClient = webClient;
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
-<<<<<<< HEAD
 		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);
-		
-=======
-		this.maliciousInputs = MaliciousInputs
-				.getMaliciousInputs(maliciousInputFilePath);
-
->>>>>>> f71bb847f815ec097532b14376eeea3fb5e82eae
 	}
 		
 	private List<String> getSensitiveData(String sensitiveDataFilePath)
