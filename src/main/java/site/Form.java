@@ -34,13 +34,12 @@ public class Form {
 
 		string += "Form-  Page:  " + form.getPage()
 				+ ";  Name:  " + form.getAttribute("name")
-				+ ";  Id:  " + form.getAttribute("id")
-				+ "\n";
+				+ ";  Id:  " + form.getAttribute("id");
 		
-		string += "\tInputs:\n";
+		string += "\n\tInputs:";
 		for (HtmlElement input : inputs) {
-			string += "\t\tName:  " + input.getAttribute("name") + ";  Id:  "
-					+ input.getAttribute("id") + "\n";
+			string += "\n\t\tName:  " + input.getAttribute("name") + ";  Id:  "
+					+ input.getAttribute("id");
 		}
 
 		return string;

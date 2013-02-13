@@ -83,9 +83,9 @@ public class Page {
 	public String toString() {
 		String string = "";
 
-		string += "URL:\t" + url + "\n";
+		string += "URL:\t" + url;
 		for (String argument : arguments) {
-			string += "\tQuery parameter:\t" + argument + "\n";
+			string += "\n\tQuery parameter:\t" + argument;
 		}
 		return string;
 	}

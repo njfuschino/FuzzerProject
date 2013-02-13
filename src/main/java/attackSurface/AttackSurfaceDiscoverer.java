@@ -38,7 +38,7 @@ public class AttackSurfaceDiscoverer {
 		}
 		List<Cookie> cookies = site.getCookies();
 		for (Cookie cookie : cookies) {
-			System.out.println("Cookie:\t" + cookie.getName() + "\n");
+			System.out.println("Cookie:\t" + cookie.getName());
 		}
 		List<Form> forms = site.getForms();
 		for (Form form : forms) {
