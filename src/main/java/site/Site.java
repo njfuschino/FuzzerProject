@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.ScriptException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
@@ -88,8 +89,26 @@ public class Site {
 		final HtmlPage p = submit.click();
 	}
 		
-	public void authenticateDVWA(HtmlForm form){
-		//This method assumes current form is the login form
+	/**
+	 * Authenticate DVWA
+	 * username: admin
+	 * password: password
+	 */
+	public void authenticateDVWA(HtmlForm form) throws IOException{
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("admin");
+		password.setValueAttribute("password");
+		
+		final HtmlPage p = submit.click();
+		try{
+			discoverPage(new Page(p));
+		}
+		catch(ScriptException e){
+			
+		}
 	}	
 
 	
@@ -141,6 +160,8 @@ public class Site {
 				}
 			} catch (FailingHttpStatusCodeException e) {
 				continue;
+			} catch (ScriptException e) {
+				System.out.println(e.getFailingLine() + "\n" + e.getPage().getUrl());
 			}
 		}
 
