@@ -19,6 +19,7 @@ public class FuzzerRunner {
 		int timeDelay = Integer.parseInt(args[1]);
 		String sensitiveDataFilePath = args[2];
 		String maliciousInputFilePath = args[3];
+		String pageGuessFilePath = args[4];
 		
 		
 		
