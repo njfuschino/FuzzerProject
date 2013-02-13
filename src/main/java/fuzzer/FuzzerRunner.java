@@ -2,6 +2,7 @@ package fuzzer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -51,6 +52,11 @@ public class FuzzerRunner {
 	 */			  
 	public static void main(String[] args) throws MalformedURLException,
 			IOException {
+		
+		//Disable reporting of irrelevant/non-applicable errors and warnings
+		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
+		java.util.logging.Logger.getLogger("org.apache.http").setLevel(Level.OFF);		
+		
 		FuzzerRunner fuzzerRunner = new FuzzerRunner(args);
 		fuzzerRunner.run();
 	}

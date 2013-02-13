@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -146,8 +147,6 @@ public class Site {
 	
 			final HtmlPage p = submit.click();
 			
-			System.out.println(p.asText());
-			
 			discoverPage(new Page(p));
 		}
 		else
@@ -201,8 +200,10 @@ public class Site {
 			} catch (FailingHttpStatusCodeException e) {
 				continue;
 			} catch (ScriptException e) {
-				System.out.println(e.getFailingLine() + "\n"
+				System.out.println("SCRIPT EXCEPTION: " + e.getFailingLine() + "\n\t"
 						+ e.getPage().getUrl());
+			} catch (UnknownHostException e) {
+				//whatever
 			}
 		}
 
