@@ -31,7 +31,7 @@ public class Fuzzer {
 				.getMaliciousInputs(maliciousInputFilePath);
 
 	}
-
+	
 	private List<String> getSensitiveData(String sensitiveDataFilePath)
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(

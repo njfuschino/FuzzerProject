@@ -10,7 +10,12 @@ import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
 public class Site {
@@ -51,11 +56,78 @@ public class Site {
 			cookies.add(cookie);
 		}
 	}
+	/**
+	 * Authenticate JPetStore
+	 * username: njf1116
+	 * password: genericpassword
+	 */
+	public void authenticateJPetStore(HtmlForm form) throws IOException{
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("njf1116");
+		password.setValueAttribute("genericpassword");
+		
+		final HtmlPage p = submit.click();
+	}
+	
+	/**
+	 * Authenticate BodgeIt
+	 * username: njfuschino@gmail.com
+	 * password: genericpassword
+	 */
+	public void authenticateBodgeIt(HtmlForm form) throws IOException{		
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("njfuschino@gmail.com");
+		password.setValueAttribute("genericpassword");
+		
+		final HtmlPage p = submit.click();
+	}
+		
+	public void authenticateDVWA(HtmlForm form){
+		//This method assumes current form is the login form
+	}	
 
+	
+	private void authenticateLogin(List<Form> forms) throws IOException{		
+		if(this.baseUrl.toString().contains("dvwa")){
+			for(Form form : forms){
+				if(form.toString().contains("login")){
+					authenticateDVWA(form.getForm());
+				}
+			}
+		}
+		else if(this.baseUrl.toString().contains("bodgeit")){
+			for(Form form : forms) {
+				if(form.toString().contains("login")){
+					authenticateBodgeIt(form.getForm());
+				}
+			}
+		}
+		else if(this.baseUrl.toString().contains("jpetstore")){
+			for(Form form : forms) {
+				if(form.toString().contains("signon") && form.toString().contains("password")){
+					authenticateJPetStore(form.getForm());
+				}
+			}
+		}
+	}
+	
 	private void discoverPage(Page page) throws MalformedURLException,
 			IOException {
 		page.discoverInputs();
 		forms.addAll(page.getForms());
+
+		System.out.println("DISCOVERING PAGE: " + page.getURL().toString());
+		
+		if(page.getURL().toString().contains("login") || page.getURL().toString().contains("Account")){
+			authenticateLogin(page.getForms());
+		}
+		
 		List<HtmlAnchor> links = page.getHtmlPage().getAnchors();
 		List<HtmlPage> linkedPages = new ArrayList<HtmlPage>();
 		for (HtmlAnchor link : links) {
@@ -89,7 +161,7 @@ public class Site {
 		}
 
 		pages.addAll(nonDuplicateLinkedPages);
-
+		
 		for (Page linkedPage : nonDuplicateLinkedPages) {
 			discoverPage(linkedPage);
 		}
@@ -112,5 +184,4 @@ public class Site {
 	public List<Form> getForms() {
 		return forms;
 	}
-
 }

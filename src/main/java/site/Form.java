@@ -29,7 +29,6 @@ public class Form {
 	public List<HtmlInput> getInputs() {
 		return inputs;
 	}
-
 	public String toString() {
 		String string = "";
 
@@ -46,4 +45,5 @@ public class Form {
 
 		return string;
 	}
+	
 }
