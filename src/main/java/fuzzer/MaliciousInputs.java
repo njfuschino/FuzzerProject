@@ -8,7 +8,8 @@ import java.util.List;
 
 public class MaliciousInputs {
 
-	public static List<String> getMaliciousInputs(String maliciousInputFilePath) throws IOException {
+	public static List<String> getMaliciousInputs(String maliciousInputFilePath)
+			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(
 				maliciousInputFilePath));
 
@@ -17,7 +18,9 @@ public class MaliciousInputs {
 
 			String line = reader.readLine();
 			while (line != null) {
-				inputs.add(line);
+				if (!line.equals("")) {
+					inputs.add(line);
+				}
 				line = reader.readLine();
 			}
 

