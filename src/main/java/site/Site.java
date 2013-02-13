@@ -10,6 +10,7 @@ import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
@@ -55,9 +56,20 @@ public class Site {
 			cookies.add(cookie);
 		}
 	}
-	public void authenticateJPetStore(HtmlForm form){
-		//username: njf1116
-		//password: genericpassword
+	/**
+	 * Authenticate JPetStore
+	 * username: njf1116
+	 * password: genericpassword
+	 */
+	public void authenticateJPetStore(HtmlForm form) throws IOException{
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("njf1116");
+		password.setValueAttribute("genericpassword");
+		
+		final HtmlPage p = submit.click();
 	}
 	
 	/**
@@ -65,8 +77,7 @@ public class Site {
 	 * username: njfuschino@gmail.com
 	 * password: genericpassword
 	 */
-	public void authenticateBodgeIt(HtmlForm form) throws IOException{
-		
+	public void authenticateBodgeIt(HtmlForm form) throws IOException{		
 		final HtmlSubmitInput submit = form.getInputByValue("Login");
 		final HtmlTextInput username = form.getInputByName("username");
 		final HtmlPasswordInput password = form.getInputByName("password");
@@ -74,12 +85,7 @@ public class Site {
 		username.setValueAttribute("njfuschino@gmail.com");
 		password.setValueAttribute("genericpassword");
 		
-		System.out.println("Login with username: " + username.getValueAttribute());
-		System.out.println("Login with password: " + password.getValueAttribute());
-		System.out.println("Submitting login information...");
 		final HtmlPage p = submit.click();
-		
-		System.out.println("Authentication response: " + p.asText());
 	}
 		
 	public void authenticateDVWA(HtmlForm form){
@@ -104,7 +110,7 @@ public class Site {
 		}
 		else if(this.baseUrl.toString().contains("jpetstore")){
 			for(Form form : forms) {
-				if(form.toString().contains("signon")){
+				if(form.toString().contains("signon") && form.toString().contains("password")){
 					authenticateJPetStore(form.getForm());
 				}
 			}
@@ -118,7 +124,7 @@ public class Site {
 
 		System.out.println("DISCOVERING PAGE: " + page.getURL().toString());
 		
-		if(page.getURL().toString().contains("login") || page.getURL().toString().contains("signon")){
+		if(page.getURL().toString().contains("login") || page.getURL().toString().contains("Account")){
 			authenticateLogin(page.getForms());
 		}
 		
