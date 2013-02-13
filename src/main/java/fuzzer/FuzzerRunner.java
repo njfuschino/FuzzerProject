@@ -18,14 +18,16 @@ public class FuzzerRunner {
 		String targetURL = args[0];
 		int timeDelay = Integer.parseInt(args[1]);
 		String sensitiveDataFilePath = args[2];
-		
+		String maliciousInputFilePath = args[3];
 		
 		
 		
 		
 		WebClient webClient = new TimeDelayWebClient(timeDelay);
+		webClient.setPrintContentOnFailingStatusCode(false);
 		
-		fuzzer = new Fuzzer(webClient, sensitiveDataFilePath);
+		
+		fuzzer = new Fuzzer(webClient, sensitiveDataFilePath, maliciousInputFilePath);
 		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL);
 		
 		
