@@ -1,10 +1,7 @@
 package fuzzer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -20,35 +17,14 @@ import site.Site;
 
 public class Fuzzer {
 	private WebClient webClient;
-	private List<String> sensitiveData;
 	private List<String> maliciousInputs;
 
-	public Fuzzer(WebClient webClient, String sensitiveDataFilePath,
+	public Fuzzer(WebClient webClient,
 			String maliciousInputFilePath) throws IOException {
 		this.webClient = webClient;
-		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
 		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);
 	}
 	
-	private List<String> getSensitiveData(String sensitiveDataFilePath)
-			throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				sensitiveDataFilePath));
-
-		try {
-			ArrayList<String> sensitiveData = new ArrayList<String>();
-			String line = reader.readLine();
-			while (line != null) {
-				sensitiveData.add(line);
-				line = reader.readLine();
-			}
-
-			return this.sensitiveData;
-		} finally {
-			reader.close();
-		}
-	}
-
 	public void fuzz(Site site) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 		fuzzPages(site);
@@ -66,17 +42,13 @@ public class Fuzzer {
 						.getFirstByXPath("//input[@id='submit']"));
 				if (submit == null) {
 					continue; // nothing we can do. If the user is really
-								// determined, they can hardcode the id
+								// determined, they can hardcode the unusual id
 				}
 				HtmlPage newPage = submit.click();
 				if (isResponseSanitized(newPage.getWebResponse(), input)) {
 					System.out
 							.println("Form failed to sanitize user input, possible vulnerability:   "
 									+ input + "\n" + form);
-				}
-				if (responseContainsSensitiveData(newPage.getWebResponse(), input)) {
-					System.out.println("Sensitive data disclosed at:\t"
-							+ newPage.getUrl());
 				}
 			}
 		}
@@ -99,22 +71,13 @@ public class Fuzzer {
 						+ argument + "=" + input;
 				try {
 					HtmlPage newPage = webClient.getPage(urlToTest);
-					
 					if (!isResponseSanitized(newPage.getWebResponse(), input)) {
 						System.out.println("Unsanitized user input at:\t"
-								+ urlToTest);
-					}
-					if (responseContainsSensitiveData(newPage.getWebResponse(), input)) {
-						System.out.println("Sensitive data disclosed at:\t"
 								+ urlToTest);
 					}
 				} catch (FailingHttpStatusCodeException e) {
 					if (!isResponseSanitized(e.getResponse(), input)) {
 						System.out.println("Unsanitized user input at:\t"
-								+ urlToTest);
-					}
-					if (responseContainsSensitiveData(e.getResponse(), input)) {
-						System.out.println("Sensitive data disclosed at:\t"
 								+ urlToTest);
 					}
 					continue;
@@ -124,17 +87,6 @@ public class Fuzzer {
 				System.out.println("Possible vulnerability at:\t" + urlToTest);
 			}
 		}
-	}
-
-	private boolean responseContainsSensitiveData(WebResponse response,
-			String input) {
-		for (String data : sensitiveData) {
-			if (response.getContentAsString().contains(data)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	private boolean isResponseSanitized(WebResponse response, String input) {

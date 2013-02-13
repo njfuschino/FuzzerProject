@@ -15,7 +15,7 @@ import com.gargoylesoftware.htmlunit.util.Cookie;
 public class AttackSurfaceDiscoverer {
 	private WebClient webClient;
 	private String targetURL;
-	private String pageGuessFilePath
+	private String pageGuessFilePath;
 
 	public AttackSurfaceDiscoverer(WebClient webClient, String targetURL, String pageGuessFilePath) {
 		this.webClient = webClient;
