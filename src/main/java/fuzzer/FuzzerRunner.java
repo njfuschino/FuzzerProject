@@ -29,7 +29,7 @@ public class FuzzerRunner {
 		
 		
 		fuzzer = new Fuzzer(webClient, sensitiveDataFilePath, maliciousInputFilePath);
-		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL);
+		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL, pageGuessFilePath);
 		
 		
 		
