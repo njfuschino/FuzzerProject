@@ -3,6 +3,8 @@ package fuzzer;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Random;
+
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
@@ -18,11 +20,17 @@ import site.Site;
 public class Fuzzer {
 	private WebClient webClient;
 	private List<String> maliciousInputs;
+	private double randomThreshold;
+	private boolean complete;
+	private Random random;
 
 	public Fuzzer(WebClient webClient,
-			String maliciousInputFilePath) throws IOException {
+			String maliciousInputFilePath, double randomThreshold, boolean complete) throws IOException {
 		this.webClient = webClient;
 		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);
+		this.randomThreshold = randomThreshold;
+		this.complete = complete;
+		this.random = new Random(0);
 	}
 	
 	public void fuzz(Site site) throws FailingHttpStatusCodeException,
@@ -35,6 +43,9 @@ public class Fuzzer {
 		for (Form formWrapper : site.getForms()) {
 			HtmlForm form = formWrapper.getForm();
 			for (String input : maliciousInputs) {
+				if (!complete && random.nextDouble() >= randomThreshold) {
+					continue;
+				}
 				for (HtmlInput inputElement : formWrapper.getInputs()) {
 					inputElement.setValueAttribute(input);
 				}
@@ -62,11 +73,16 @@ public class Fuzzer {
 		}
 	}
 
-	// TODO: completeness
 	private void fuzz(Page page) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 		for (String argument : page.getArguments()) {
+			if (!complete && random.nextDouble() >= randomThreshold) {
+				continue;
+			}
 			for (String input : maliciousInputs) {
+				if (!complete && random.nextDouble() >= randomThreshold) {
+					continue;
+				}
 				String urlToTest = page.getURL().toExternalForm() + "?"
 						+ argument + "=" + input;
 				try {
