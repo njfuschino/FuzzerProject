@@ -1,10 +1,13 @@
 package site;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -27,8 +30,10 @@ public class Site {
 	private List<Page> pages;
 	private List<Cookie> cookies;
 	private List<Form> forms;
+	private String pageGuessFilePath;
 
-	public Site(HtmlPage baseHtmlPage) throws MalformedURLException {
+	public Site(HtmlPage baseHtmlPage, String pageGuessFilePath) throws MalformedURLException {
+		this.pageGuessFilePath = pageGuessFilePath;
 		this.webClient = baseHtmlPage.getWebClient();
 		this.basePage = new Page(baseHtmlPage);
 		this.baseUrl = baseHtmlPage.getWebResponse().getWebRequest().getUrl();
@@ -47,8 +52,42 @@ public class Site {
 	}
 
 	private void guessPages() {
-		// TODO Auto-generated method stub
-		
+		File file = new File(pageGuessFilePath);
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String curLine;
+		String guess;
+		HtmlPage guessPage;
+		while (scanner.hasNextLine()) {
+			curLine = scanner.nextLine();
+			guess = baseUrl.toString() + curLine;
+			try {
+				guessPage = webClient.getPage(guess);
+				boolean doesContain = false;
+				for(Page p : pages){
+					if(p.getHtmlPage() == guessPage){
+						doesContain = true;
+					}
+				}
+				if(!doesContain){
+					pages.add(new Page(guessPage));
+				}
+			} catch (FailingHttpStatusCodeException e) {
+				continue;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		scanner.close();	
 	}
 
 	private void discoverCookies() {
