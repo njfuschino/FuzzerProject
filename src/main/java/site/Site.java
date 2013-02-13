@@ -11,6 +11,10 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
 public class Site {
@@ -51,28 +55,57 @@ public class Site {
 			cookies.add(cookie);
 		}
 	}
+	public void authenticateJPetStore(HtmlForm form){
+		//username: njf1116
+		//password: genericpassword
+	}
+	
+	/**
+	 * Authenticate BodgeIt
+	 * username: njfuschino@gmail.com
+	 * password: genericpassword
+	 */
+	public void authenticateBodgeIt(HtmlForm form) throws IOException{
+		
+		final HtmlSubmitInput submit = form.getInputByValue("Login");
+		final HtmlTextInput username = form.getInputByName("username");
+		final HtmlPasswordInput password = form.getInputByName("password");
+		
+		username.setValueAttribute("njfuschino@gmail.com");
+		password.setValueAttribute("genericpassword");
+		
+		System.out.println("Login with username: " + username.getValueAttribute());
+		System.out.println("Login with password: " + password.getValueAttribute());
+		System.out.println("Submitting login information...");
+		final HtmlPage p = submit.click();
+		
+		System.out.println("Authentication response: " + p.asText());
+	}
+		
+	public void authenticateDVWA(HtmlForm form){
+		//This method assumes current form is the login form
+	}	
 
-	private void authenticateLogin(List<Form> forms) throws IOException{
-		
-		
+	
+	private void authenticateLogin(List<Form> forms) throws IOException{		
 		if(this.baseUrl.toString().contains("dvwa")){
 			for(Form form : forms){
 				if(form.toString().contains("login")){
-					form.authenticateDVWA();
+					authenticateDVWA(form.getForm());
 				}
 			}
 		}
 		else if(this.baseUrl.toString().contains("bodgeit")){
 			for(Form form : forms) {
 				if(form.toString().contains("login")){
-					form.authenticateBodgeIt();
+					authenticateBodgeIt(form.getForm());
 				}
 			}
 		}
 		else if(this.baseUrl.toString().contains("jpetstore")){
 			for(Form form : forms) {
 				if(form.toString().contains("signon")){
-					form.authenticateJPetStore();
+					authenticateJPetStore(form.getForm());
 				}
 			}
 		}
