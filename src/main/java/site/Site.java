@@ -52,10 +52,43 @@ public class Site {
 		}
 	}
 
+	private void authenticateLogin(List<Form> forms) throws IOException{
+		
+		
+		if(this.baseUrl.toString().contains("dvwa")){
+			for(Form form : forms){
+				if(form.toString().contains("login")){
+					form.authenticateDVWA();
+				}
+			}
+		}
+		else if(this.baseUrl.toString().contains("bodgeit")){
+			for(Form form : forms) {
+				if(form.toString().contains("login")){
+					form.authenticateBodgeIt();
+				}
+			}
+		}
+		else if(this.baseUrl.toString().contains("jpetstore")){
+			for(Form form : forms) {
+				if(form.toString().contains("signon")){
+					form.authenticateJPetStore();
+				}
+			}
+		}
+	}
+	
 	private void discoverPage(Page page) throws MalformedURLException,
 			IOException {
 		page.discoverInputs();
 		forms.addAll(page.getForms());
+
+		System.out.println("DISCOVERING PAGE: " + page.getURL().toString());
+		
+		if(page.getURL().toString().contains("login") || page.getURL().toString().contains("signon")){
+			authenticateLogin(page.getForms());
+		}
+		
 		List<HtmlAnchor> links = page.getHtmlPage().getAnchors();
 		List<HtmlPage> linkedPages = new ArrayList<HtmlPage>();
 		for (HtmlAnchor link : links) {
@@ -89,7 +122,7 @@ public class Site {
 		}
 
 		pages.addAll(nonDuplicateLinkedPages);
-
+		
 		for (Page linkedPage : nonDuplicateLinkedPages) {
 			discoverPage(linkedPage);
 		}
@@ -112,5 +145,4 @@ public class Site {
 	public List<Form> getForms() {
 		return forms;
 	}
-
 }

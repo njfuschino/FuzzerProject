@@ -21,7 +21,7 @@ public class Fuzzer {
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
 
 	}
-
+	
 	private List<String> getSensitiveData(String sensitiveDataFilePath)
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(

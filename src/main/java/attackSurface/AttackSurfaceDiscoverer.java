@@ -20,7 +20,7 @@ public class AttackSurfaceDiscoverer {
 		this.webClient = webClient;
 		this.targetURL = targetURL;
 	}
-
+	
 	public Site discoverAttackSurface() throws MalformedURLException,
 			IOException {
 		HtmlPage page = webClient.getPage(targetURL);
