@@ -21,18 +21,11 @@ public class FuzzerRunner {
 		String maliciousInputFilePath = args[3];
 		String pageGuessFilePath = args[4];
 		
-		
-		
-		
-		WebClient webClient = new TimeDelayWebClient(timeDelay);
+		WebClient webClient = new TimeDelayWebClient(timeDelay, sensitiveDataFilePath);
 		webClient.setPrintContentOnFailingStatusCode(false);
-		
 		
 		fuzzer = new Fuzzer(webClient, sensitiveDataFilePath, maliciousInputFilePath);
 		attackSurfaceDiscoverer = new AttackSurfaceDiscoverer(webClient, targetURL, pageGuessFilePath);
-		
-		
-		
 	}
 	
 	public void run() throws MalformedURLException, IOException {
