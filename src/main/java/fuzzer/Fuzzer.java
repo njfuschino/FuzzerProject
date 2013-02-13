@@ -23,7 +23,8 @@ public class Fuzzer {
 	private List<String> maliciousInputs;
 
 	public Fuzzer(WebClient webClient, String sensitiveDataFilePath,
-			String maliciousInputFilePath) throws IOException {
+			String maliciousInputFilePath, String userNamesFilePath, 
+			String passwordsFilePath) throws IOException {
 		this.webClient = webClient;
 		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
 		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);

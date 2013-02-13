@@ -21,6 +21,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 
+import fuzzer.LoginFuzzer;
+
 public class Site {
 	private WebClient webClient;
 
@@ -30,6 +32,7 @@ public class Site {
 	private List<Cookie> cookies;
 	private List<Form> forms;
 	private String pageGuessFilePath;
+	private LoginFuzzer loginFuzzer = null;
 
 	public Site(HtmlPage baseHtmlPage, String pageGuessFilePath)
 			throws MalformedURLException {
@@ -41,6 +44,10 @@ public class Site {
 		this.cookies = new ArrayList<Cookie>();
 		this.forms = new ArrayList<Form>();
 		pages.add(basePage);
+	}
+	
+	public void enablePasswordFuzzing(String userNamesFilePath, String passwordsFilePath) throws IOException{
+		this.loginFuzzer = new LoginFuzzer(userNamesFilePath, passwordsFilePath);
 	}
 
 	public void discoverSite() throws MalformedURLException, IOException {
@@ -90,49 +97,61 @@ public class Site {
 	/**
 	 * Authenticate JPetStore username: njf1116 password: genericpassword
 	 */
-	public void authenticateJPetStore(HtmlForm form) throws IOException {
+	private void authenticateJPetStore(HtmlForm form) throws IOException {
 		final HtmlSubmitInput submit = form.getInputByValue("Login");
 		final HtmlTextInput username = form.getInputByName("username");
 		final HtmlPasswordInput password = form.getInputByName("password");
 
-		username.setValueAttribute("njf1116");
-		password.setValueAttribute("genericpassword");
-
-		final HtmlPage p = submit.click();
+		if (null == loginFuzzer){
+			username.setValueAttribute("njf1116");
+			password.setValueAttribute("genericpassword");
+	
+			final HtmlPage p = submit.click();
+		}
+		else
+			loginFuzzer.fuzzLogin(submit, username, password);
 	}
 
 	/**
 	 * Authenticate BodgeIt username: njfuschino@gmail.com password:
 	 * genericpassword
 	 */
-	public void authenticateBodgeIt(HtmlForm form) throws IOException {
+	private void authenticateBodgeIt(HtmlForm form) throws IOException {
 		final HtmlSubmitInput submit = form.getInputByValue("Login");
 		final HtmlTextInput username = form.getInputByName("username");
 		final HtmlPasswordInput password = form.getInputByName("password");
-
-		username.setValueAttribute("njfuschino@gmail.com");
-		password.setValueAttribute("genericpassword");
-
-		final HtmlPage p = submit.click();
+		
+		if (null == loginFuzzer){
+			username.setValueAttribute("nick@nick.com");
+			password.setValueAttribute("asdfasdf");
+	
+			final HtmlPage p = submit.click();
+		}
+		else
+			loginFuzzer.fuzzLogin(submit, username, password);
 	}
 
 	/**
 	 * Authenticate DVWA username: admin password: password
 	 */
-	public void authenticateDVWA(HtmlForm form) throws IOException {
-		final HtmlSubmitInput submit = form.getInputByValue("Login");
-		final HtmlTextInput username = form.getInputByName("username");
-		final HtmlPasswordInput password = form.getInputByName("password");
+	private void authenticateDVWA(HtmlForm form) throws IOException {
+		
+			final HtmlSubmitInput submit = form.getInputByValue("Login");
+			final HtmlTextInput username = form.getInputByName("username");
+			final HtmlPasswordInput password = form.getInputByName("password");
 
-		username.setValueAttribute("admin");
-		password.setValueAttribute("password");
-
-		final HtmlPage p = submit.click();
-		try {
+		if (null == loginFuzzer){
+			username.setValueAttribute("admin");
+			password.setValueAttribute("password");
+	
+			final HtmlPage p = submit.click();
+			
+			System.out.println(p.asText());
+			
 			discoverPage(new Page(p));
-		} catch (ScriptException e) {
-
 		}
+		else
+			loginFuzzer.fuzzLogin(submit, username, password);
 	}
 
 	private void authenticateLogin(List<Form> forms) throws IOException {

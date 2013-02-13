@@ -23,10 +23,14 @@ public class AttackSurfaceDiscoverer {
 		this.pageGuessFilePath = pageGuessFilePath;
 	}
 	
-	public Site discoverAttackSurface() throws MalformedURLException,
+	public Site discoverAttackSurface(String userPath, String passPath) throws MalformedURLException,
 			IOException {
 		HtmlPage page = webClient.getPage(targetURL);
 		Site site = new Site(page, pageGuessFilePath);
+		
+		if (!userPath.equals("0") && !passPath.equals("0"))
+			site.enablePasswordFuzzing(userPath, passPath);
+		
 		site.discoverSite();
 		return site;
 	}
