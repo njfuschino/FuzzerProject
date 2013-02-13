@@ -1,7 +1,10 @@
 package fuzzer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +14,6 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import site.Form;
 import site.Page;
@@ -19,20 +21,44 @@ import site.Site;
 
 public class Fuzzer {
 	private WebClient webClient;
+	private List<String> sensitiveData;
 	private List<String> maliciousInputs;
 	private double randomThreshold;
 	private boolean complete;
 	private Random random;
 
-	public Fuzzer(WebClient webClient,
-			String maliciousInputFilePath, double randomThreshold, boolean complete) throws IOException {
+	public Fuzzer(WebClient webClient, String sensitiveDataFilePath,
+			String maliciousInputFilePath, String userNamesFilePath,
+			String passwordsFilePath, double randomThreshold, boolean complete)
+			throws IOException {
 		this.webClient = webClient;
-		this.maliciousInputs = MaliciousInputs.getMaliciousInputs(maliciousInputFilePath);
+		this.sensitiveData = getSensitiveData(sensitiveDataFilePath);
+		this.maliciousInputs = MaliciousInputs
+				.getMaliciousInputs(maliciousInputFilePath);
 		this.randomThreshold = randomThreshold;
 		this.complete = complete;
 		this.random = new Random(0);
 	}
-	
+
+	private List<String> getSensitiveData(String sensitiveDataFilePath)
+			throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(
+				sensitiveDataFilePath));
+
+		try {
+			ArrayList<String> sensitiveData = new ArrayList<String>();
+			String line = reader.readLine();
+			while (line != null) {
+				sensitiveData.add(line);
+				line = reader.readLine();
+			}
+
+			return this.sensitiveData;
+		} finally {
+			reader.close();
+		}
+	}
+
 	public void fuzz(Site site) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 		fuzzPages(site);
@@ -53,10 +79,10 @@ public class Fuzzer {
 						.getFirstByXPath("//input[@id='submit']"));
 				if (submit == null) {
 					continue; // nothing we can do. If the user is really
-								// determined, they can hardcode the unusual id
+								// determined, they can hardcode the id
 				}
-				HtmlPage newPage = submit.click();
-				if (isResponseSanitized(newPage.getWebResponse(), input)) {
+				if (submit.click().getWebResponse().getContentAsString()
+						.contains(input)) {
 					System.out
 							.println("Form failed to sanitize user input, possible vulnerability:   "
 									+ input + "\n" + form);
@@ -86,11 +112,7 @@ public class Fuzzer {
 				String urlToTest = page.getURL().toExternalForm() + "?"
 						+ argument + "=" + input;
 				try {
-					HtmlPage newPage = webClient.getPage(urlToTest);
-					if (!isResponseSanitized(newPage.getWebResponse(), input)) {
-						System.out.println("Unsanitized user input at:\t"
-								+ urlToTest);
-					}
+					webClient.getPage(urlToTest);
 				} catch (FailingHttpStatusCodeException e) {
 					if (!isResponseSanitized(e.getResponse(), input)) {
 						System.out.println("Unsanitized user input at:\t"
