@@ -16,7 +16,7 @@ public class AttackSurfaceDiscoverer {
 	private WebClient webClient;
 	private String targetURL;
 
-	public AttackSurfaceDiscoverer(WebClient webClient, String targetURL) {
+	public AttackSurfaceDiscoverer(WebClient webClient, String targetURL, String pageGuessFilePath) {
 		this.webClient = webClient;
 		this.targetURL = targetURL;
 	}

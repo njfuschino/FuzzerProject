@@ -1,38 +1,34 @@
 package site;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 public class Form {
 	HtmlForm form;
-	List<HtmlElement> inputs;
+	List<HtmlInput> inputs;
 
 	public Form(HtmlForm form) {
 		this.form = form;
-		this.inputs = new ArrayList<HtmlElement>();
+		this.inputs = new ArrayList<HtmlInput>();
 
 		for (HtmlElement element : form.getHtmlElementDescendants()) {
-			if (element instanceof HtmlInput || element instanceof HtmlTextArea) {
-				inputs.add(element);
+			if (element instanceof HtmlInput) {
+				inputs.add((HtmlInput) element);
 			}
 		}
 	}
 	
-	public HtmlForm getForm(){
-		return this.form;
+	public HtmlForm getForm() {
+		return form;
 	}
 	
+	public List<HtmlInput> getInputs() {
+		return inputs;
+	}
 	public String toString() {
 		String string = "";
 
