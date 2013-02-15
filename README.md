@@ -13,6 +13,38 @@ You will need:
 
 =============
 
+To ensure the correctness of the fuzzer's sensitive data list, prior to 
+running the fuzzer be sure that you have registered with the targeted 
+web applications with the following registration information:
+
+DVWA: (use default login information)
+
+Username:	admin
+Password:	password
+
+-------
+
+JPetStore:
+
+User ID: 	njf1116	
+Password: 	genericpassword
+First Name: Nick
+Last Name:	Fuschino
+Email:		njfuschino@website.com
+Phone:		555-555-5555
+Address 1:	123 Fake Street
+
+-------
+
+BodgeIt:
+
+Username:	nick@website.com
+Password:	genericpassword
+
+
+
+=============
+
 To run the Fuzzer from the command line:
 
 "java Fuzzer 0 1 2 3 4 5 6"
