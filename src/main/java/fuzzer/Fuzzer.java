@@ -69,24 +69,31 @@ public class Fuzzer {
 		for (Form formWrapper : site.getForms()) {
 			HtmlForm form = formWrapper.getForm();
 			for (String input : maliciousInputs) {
+				
 				if (!complete && random.nextDouble() >= randomThreshold) {
 					continue;
 				}
 				for (HtmlInput inputElement : formWrapper.getInputs()) {
 					inputElement.setValueAttribute(input);
 				}
+	
 				HtmlElement submit = ((HtmlElement) form
-						.getFirstByXPath("//input[@id='submit']"));
+						.getFirstByXPath("//input[@type='submit']"));
+				
 				if (submit == null) {
+					System.out.println("NULL BUTTON");
 					continue; // nothing we can do. If the user is really
 								// determined, they can hardcode the id
+								//EDIT: if here, no submit button?
 				}
+	
 				if (submit.click().getWebResponse().getContentAsString()
 						.contains(input)) {
 					System.out
 							.println("Form failed to sanitize user input, possible vulnerability:   "
 									+ input + "\n" + form);
 				}
+			
 			}
 		}
 	}

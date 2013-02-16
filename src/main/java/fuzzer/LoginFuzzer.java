@@ -23,7 +23,6 @@ public class LoginFuzzer {
 
 	public void fuzzLogin(HtmlSubmitInput submitInput, HtmlTextInput usernameInput, 
 			HtmlPasswordInput passwordInput) throws IOException{
-		System.out.println("Fuzzing authentication...");
 		
 		for (String username : usernames){
 			for (String password : passwords){
@@ -31,7 +30,7 @@ public class LoginFuzzer {
 				passwordInput.setValueAttribute(password);
 				
 				final HtmlPage p = submitInput.click();
-				
+					
 				if (p.asText().contains("successfully") || p.asText().contains("Welcome")){
 					System.out.println("Successfully guessed login: ");
 					System.out.println("\tusername: " + username);
