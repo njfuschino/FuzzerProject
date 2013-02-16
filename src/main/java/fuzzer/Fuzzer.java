@@ -4,16 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.util.Cookie;
 
 import site.Form;
 import site.Page;
@@ -103,6 +107,7 @@ public class Fuzzer {
 		List<Page> pages = site.getPages();
 		for (Page page : pages) {
 			fuzz(page);
+			fuzzCookies(page);
 		}
 	}
 
@@ -140,6 +145,51 @@ public class Fuzzer {
 		} else {
 			return true;
 		}
+	}
+	
+	private void fuzzCookies(Page p){
+		URL url = p.getURL();
+		try {
+			webClient.getPage(url);
+		} catch (FailingHttpStatusCodeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CookieManager cookieManager = webClient.getCookieManager();
+		for (Cookie cookie : cookieManager.getCookies(url)) {
+			String name = cookie.getName();
+			String domain = cookie.getDomain();
+			Date expires = cookie.getExpires();
+			String path = cookie.getPath();
+			boolean secure = cookie.isSecure();
+			Cookie newCookie = new Cookie(domain,name,"aaaaaaaaaaaaaaa",path,expires,secure);
+			cookieManager.removeCookie(cookie);
+			cookieManager.addCookie(newCookie);
+			try {
+				webClient.getPage(url);
+			} catch (FailingHttpStatusCodeException e) {
+				// TODO Auto-generated catch block
+				System.out.println(url.toString() + ": Altering " + cookie.getName() + "caused a FailingHttpStatusCodeException.");
+				continue;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				System.out.println(url.toString() + ": Altering " + cookie.getName() + "caused a MalformedURLException.");
+				continue;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(url.toString() + ": Altering " + cookie.getName() + "caused an IOException.");
+				continue;
+			}
+			cookieManager.removeCookie(newCookie);
+			cookieManager.addCookie(cookie);
+		}
+		
 	}
 
 }
