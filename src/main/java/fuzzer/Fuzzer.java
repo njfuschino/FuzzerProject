@@ -98,6 +98,7 @@ public class Fuzzer {
 	private void fuzzPages(Site site) throws FailingHttpStatusCodeException,
 			MalformedURLException, IOException {
 		List<Page> pages = site.getPages();
+		int n = 0;
 		for (Page page : pages) {
 			fuzz(page);
 			fuzzCookies(page);
@@ -143,7 +144,7 @@ public class Fuzzer {
 	private void fuzzCookies(Page p){
 		URL url = p.getURL();
 		try {
-			webClient.getPage(url);
+			webClient.getPage(url.toString());
 		} catch (FailingHttpStatusCodeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,7 +166,7 @@ public class Fuzzer {
 			cookieManager.removeCookie(cookie);
 			cookieManager.addCookie(newCookie);
 			try {
-				webClient.getPage(url);
+				webClient.getPage(url.toString());
 			} catch (FailingHttpStatusCodeException e) {
 				// TODO Auto-generated catch block
 				System.out.println(url.toString() + ": Altering " + cookie.getName() + "caused a FailingHttpStatusCodeException.");
