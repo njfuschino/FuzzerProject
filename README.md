@@ -13,9 +13,10 @@ You will need:
 
 =============
 
-To ensure the correctness of the fuzzer's sensitive data list, prior to 
-running the fuzzer be sure that you have registered with the targeted 
-web applications with the following registration information:
+To ensure the correctness of the fuzzer's sensitive data list and to allow
+automated authentication, prior to running the fuzzer be sure that you have 
+registered with the targeted web applications with the following registration 
+information:
 
 DVWA: (use default login information)
 
